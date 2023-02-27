@@ -21,6 +21,8 @@
         </thead>
         <tbody>
             <?php
+                $key = 'abcdefghijklmnop';
+
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo '<tr>';
                     // Construct image path
@@ -32,17 +34,26 @@
                         // Display default image
                         echo "<td><img src='assets/images/default-image.jpg' width='100px'></td>";
                     }
-                    // Display other data
-                    echo '<td>' . $row['location'] . '</td>';
-                    echo '<td>' . formatDate($row['date']) . ' - '. $row['time'] .'</td>';
-                    echo '<td>' . $row['message'] . '</td>';
-                    echo '<td>' . ($row['scary'] ? 'Yes' : 'No') . '</td>';
-                    echo "<td><a href='details.php?id={$row['id']}' class='btn btn-primary'>Details</a></td>";
-                    echo '</tr>';
-                }
+                     // Display other data
+                     echo '<td>' . $row['location'] . '</td>';
+                     echo '<td>' . formatDate($row['date']) . ' - '. $row['time'] .'</td>';
+                     echo '<td>' . $row['message'] . '</td>';
+                     echo '<td>' . ($row['scary'] ? 'Yes' : 'No') . '</td>';
+ 
+                    // Encrypt the ID using AES-256-CBC
+                     $encryptedId = openssl_encrypt($row['id'], 'AES-256-CBC', $key, OPENSSL_RAW_DATA, '1234567890123456');
+                    // Encode the encrypted ID in base64
+                     $encodedId = base64_encode($encryptedId);
+                    // Add the encrypted ID to the details link
+                     echo "<td><a href='details.php?id={$encodedId}' class='btn btn-primary'>Details</a></td>";
+ 
+                     echo '</tr>';
+                 }
             ?>
         </tbody>
     </table>
 </div>
 
 <?php require 'footer.php' ?>
+
+

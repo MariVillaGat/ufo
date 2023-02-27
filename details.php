@@ -1,10 +1,17 @@
 <?php
+$key = 'abcdefghijklmnop';
 require 'header.php';
 
 // Check if ID parameter is set
 if (isset($_GET['id'])) {
-  $id = $_GET['id'];
-  $query = "SELECT * FROM aliens WHERE id = $id AND approved = 1";
+  // Decode the base64 encoded encrypted ID
+  $encodedId = $_GET['id'];
+  $encryptedId = base64_decode($encodedId);
+  // Decrypt the encrypted ID using AES-256-CBC
+  $decryptedId = openssl_decrypt($encryptedId, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, '1234567890123456');
+
+  // Use the decrypted ID in the query
+  $query = "SELECT * FROM aliens WHERE id = $decryptedId AND approved = 1";
   $result = mysqli_query($conn, $query);
   $row = mysqli_fetch_assoc($result);
 
