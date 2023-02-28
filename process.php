@@ -31,24 +31,30 @@
 
                 // reference the Dompdf namespace
                 use Dompdf\Dompdf;
-                $html = '<h1>UFO Certificate</h1>';
-                $html .= '<p>You have been in contact with a UFO</p>';
-                $html .= '<p>Name: '.$name.'</p>';
-                $html .= '<p>Email: '.$email.'</p>';
-                $html .= '<p>Location: '.$location.'</p>';
-                $html .= '<p>Date: '.formatDate($date).'</p>';
-                $html .= '<p>Time: '.$time.'</p>';
-                $html .= '<p>Message: '.$message.'</p>';
-                $html .= '<p>Image: <img src="http://localhost:8000/assets/images/'.$filename.'" width="200"></p>';   
-                $html .= '<p>Scary: '.($scary ? 'Yes' : 'No').'</p>';
-                $html .= '<p>Thank you for your submission</p>';
 
+
+                // Read the image file contents and encode it in base64
+                $imageData = base64_encode(file_get_contents('path/to/image.jpg'));
+
+
+                $html = '<h1 style="text-align: center; color: #008000;">UFO Certificate</h1> <hr>';
+                $html .= '<h2 style="font-size: 18px;">You have been in contact with a UFO</h2>';
+                $html .= '<p style="font-size: 16px;">Name: '.$name.'</p>';
+                $html .= '<p style="font-size: 16px;">Email: '.$email.'</p>';
+                $html .= '<p style="font-size: 16px;">Location: '.$location.'</p>';
+                $html .= '<p style="font-size: 16px;">Date: '.formatDate($date).'</p>';
+                $html .= '<p style="font-size: 16px;">Time: '.$time.'</p>';
+                $html .= '<p style="font-size: 16px;">Message: '.$message.'</p>';
+                $html .= '<p style="font-size: 16px;"> Image: <img src="data:image/jpeg;base64,'.$imageData.'" width="200" style="display: block;"></p>';
+                $html .= '<p style="font-size: 16px;">Scary: '.($scary ? 'Yes' : 'No').'</p> <br>';
+                $html .= '<h1 style="font-size: 18px; color: #008000;">Thank you for your submission</h1>';
+                
                 // instantiate and use the dompdf class
                 $dompdf = new Dompdf();
                 $dompdf->loadHtml($html);
 
                 // (Optional) Setup the paper size and orientation
-                $dompdf->setPaper('A4', 'landscape');
+                $dompdf->setPaper('A4', 'portrait');
 
                 // Render the HTML as PDF
                 $dompdf->render();
