@@ -32,10 +32,11 @@
                 // reference the Dompdf namespace
                 use Dompdf\Dompdf;
 
-
-                // Read the image file contents and encode it in base64
-                $imageData = base64_encode(file_get_contents('path/to/image.jpg'));
-
+                // PDF SNIPPET
+                $pathImg = 'assets/images/'.$filename;
+                $getImg = file_get_contents($pathImg);
+                $encimage = base64_encode($getImg);
+                
 
                 $html = '<h1 style="text-align: center; color: #008000;">UFO Certificate</h1> <hr>';
                 $html .= '<h2 style="font-size: 18px;">You have been in contact with a UFO</h2>';
@@ -45,10 +46,11 @@
                 $html .= '<p style="font-size: 16px;">Date: '.formatDate($date).'</p>';
                 $html .= '<p style="font-size: 16px;">Time: '.$time.'</p>';
                 $html .= '<p style="font-size: 16px;">Message: '.$message.'</p>';
-                $html .= '<p style="font-size: 16px;"> Image: <img src="data:image/jpeg;base64,'.$imageData.'" width="200" style="display: block;"></p>';
+                $html .= '<p><img src="data:image/svg+xml;base64,' . $encimage . '"</p>';
+                // $html .= '<p>Image: <img src="http://localhost:8000/assets/images/'.$filename.'" width="200"></p>';   
                 $html .= '<p style="font-size: 16px;">Scary: '.($scary ? 'Yes' : 'No').'</p> <br>';
                 $html .= '<h1 style="font-size: 18px; color: #008000;">Thank you for your submission</h1>';
-                
+
                 // instantiate and use the dompdf class
                 $dompdf = new Dompdf();
                 $dompdf->loadHtml($html);
@@ -59,9 +61,11 @@
                 // Render the HTML as PDF
                 $dompdf->render();
                 ob_end_clean();
+                
                 // Output the generated PDF to Browser
                 $dompdf->stream();
-                
+
+
                 
                 die();
                 
